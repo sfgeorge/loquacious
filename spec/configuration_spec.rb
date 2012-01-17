@@ -454,6 +454,13 @@ describe Loquacious::Configuration do
 
   # Added tests
   describe "added features for ENV configuration" do
+    before(:all) do
+     Loquacious.env_config = true
+    end
+    after(:all) do
+     Loquacious.env_config = false
+    end
+
     let(:obj) {
       Loquacious.configuration_for('app') {
         name :testing, :desc => "Defines the name", :transform =>  Proc.new{|arg| arg.to_sym }

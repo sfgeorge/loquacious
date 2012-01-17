@@ -353,6 +353,17 @@ describe Loquacious::Configuration::Help do
     OUTPUT
     help.show_all :values => true
     @sio.to_s.should be == str.gutter!
+
+  end
+  it "prints out a specific attribute with the ENV key specified" do
+    Loquacious.env_config = true
+    str = <<-OUTPUT
+    | bar method [LOQ_SPECS_SECOND]
+    |  - second
+    |
+    OUTPUT
+    @help.show_attribute :second
+    @sio.to_s.should be == str.gutter!
+    Loquacious.env_config = false
   end
 end
-

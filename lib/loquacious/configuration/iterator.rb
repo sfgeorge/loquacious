@@ -133,7 +133,11 @@ class Loquacious::Configuration
 
       cfg = frame.config
       name = frame.prefix.empty? ? key.to_s : frame.prefix + ".#{key}"
-      Node.new(cfg, name, cfg.__desc[key], key)
+      description = cfg.__desc[key]
+      if Loquacious.env_config
+        description += " [" + Loquacious::Utility.env_var_name(name, cfg) + "]"
+      end
+      Node.new(cfg, name, description, key)
     end
 
     # Structure describing a single iteration stack frame. A new stack frame

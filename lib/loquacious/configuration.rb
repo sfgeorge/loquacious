@@ -116,7 +116,7 @@ module Loquacious
           current_parent = current_parent.__parent
         end
         parents
-      end 
+      end
     end#self methods
 
 
@@ -369,7 +369,7 @@ module Loquacious
       #
       def method_missing( method, *args, &block )
         m = method.to_s.delete('=').to_sym
-        
+
         if args.length > 1
           opts = args.last.instance_of?(Hash) ? args.pop : {}
           self.desc(opts[:desc]) if opts.has_key? :desc

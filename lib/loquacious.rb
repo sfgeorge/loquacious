@@ -150,7 +150,7 @@ module Loquacious
 
   end  # class << self
 
-  @env_config = true
+  @env_config = false
   @env_prefix = "LOQ"
 end  # module Loquacious
 
