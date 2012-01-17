@@ -1,4 +1,3 @@
-
 module Loquacious
 
   # :stopdoc:
@@ -9,7 +8,13 @@ module Loquacious
             %r/^__|^object_id$|^initialize$|^instance_eval$|^\w+\?$/
   # :startdoc:
 
+
   class << self
+    # These control respectively if ENV overrides are used, and which prefix is used
+    # Defaults are true and LOQ, and are declared at the bottom"
+    attr_accessor :env_config
+    attr_accessor :env_prefix
+
 
     # Returns the configuration associated with the given _name_. If a
     # _block_ is given, then it will be used to create the configuration.
@@ -144,6 +149,9 @@ module Loquacious
     end
 
   end  # class << self
+
+  @env_config = true
+  @env_prefix = "LOQ"
 end  # module Loquacious
 
 Loquacious.libpath {

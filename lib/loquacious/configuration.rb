@@ -106,6 +106,8 @@ module Loquacious
         return cache[nil]
       end
 
+      # Returns a string array with the parent tree for the config
+      #
       def parent_list(config)
         current_parent = config.__parent
         parents = []
@@ -116,7 +118,13 @@ module Loquacious
         parents
       end
 
-    end#self methdos
+      # Returns the variable name to use for a value to be picked from ENV
+      # 
+      def env_var_name(name, config)
+        [::Loquacious.env_prefix, config.parent_list.join("_"), config.__name, name.to_s].join("_").upcase
+      end
+
+    end#self methods
 
 
     instance_methods(true).each do |m|
@@ -152,6 +160,9 @@ module Loquacious
     # Name of the parent configuration object, used for traversal
     attr_accessor :__parent
 
+    # Hash holding the transform procs
+    attr_accessor :__transforms
+
     # Create a new configuration object and initialize it using an optional
     # _block_ of code.
     #
@@ -159,6 +170,7 @@ module Loquacious
       @__desc = Hash.new
       @__values = Hash.new
       @__defaults = Hash.new
+      @__transforms = Hash.new
       @__defaults_mode = false
       @__parent = nil
       DSL.evaluate(:config => self, &block) if block
@@ -181,6 +193,16 @@ module Loquacious
           if args.empty? and !block
             return value if value.kind_of?(Configuration)
             value = @__defaults[#{m.inspect}] if value.kind_of?(Loquacious::Undefined) and @__defaults.has_key? #{m.inspect}
+            #if Loquacious.env_config
+              #env_name = Loquacious::Configuration.env_var_name(m, self)
+              #if ENV.has_key? env_name
+                #if @__transforms.has_key? m
+                  #return @__transforms[m].call ENV[env_name]
+                #else
+                  #return ENV[env_name]
+                #end
+              #end
+            #end
             return value.respond_to?(:call) ? value.call : value
           end
 
@@ -337,6 +359,7 @@ module Loquacious
       #
       def initialize( opts = {}, &block )
         @description = nil
+        @transform_to_store = nil
         @__config = opts[:config] || Configuration.new
         @__config.__defaults_mode = opts.key?(:defaults_mode) ? opts[:defaults_mode] : false
         @__config.__name = opts[:config_name] || nil
@@ -353,15 +376,18 @@ module Loquacious
       #
       def method_missing( method, *args, &block )
         m = method.to_s.delete('=').to_sym
-
+        
         if args.length > 1
           opts = args.last.instance_of?(Hash) ? args.pop : {}
           self.desc(opts[:desc]) if opts.has_key? :desc
+          self.transform(opts[:transform]) if opts.has_key? :transform
         end
 
         rv = __config.__send(m, *args, &block)
         __config.__desc[m] = @description if @description
+        __config.__transforms[m] = @transform_to_store if @transform_to_store
         @description = nil
+        @transform_to_store = nil
         rv
       end
 
@@ -375,6 +401,11 @@ module Loquacious
         string.gutter!
         @description = string.empty? ? nil : string
       end
+
+      def transform( transform_proc )
+        @transform_to_store = transform_proc
+      end
+
     end  # class DSL
 
   end  # class Configuration

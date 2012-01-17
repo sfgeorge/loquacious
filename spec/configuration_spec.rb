@@ -456,7 +456,7 @@ describe Loquacious::Configuration do
   describe "added features for ENV configuration" do
     let(:obj) {
       Loquacious.configuration_for('app') {
-        name 'value', :desc => "Defines the name", :transform => Proc.new{|baz| baz.to_s }
+        name :testing, :desc => "Defines the name", :transform =>  Proc.new{|arg| arg.to_sym }
         foo  'bar',   :desc => "FooBar"
         id   42,      :desc => "Ara T. Howard"
         bar {
@@ -480,11 +480,23 @@ describe Loquacious::Configuration do
       obj.bar.__parent.__name.eql?("app").should be_true
     end
 
+    it "stores the transform for a configuration key" do
+      obj.__transforms[:name].is_a?(Proc).should be_true
+    end
+
     describe "#parent_list" do
       it "returns the correct parent list for a configuration object" do
         obj.bar.baz.parent_list.eql?(["app", "bar"]).should be_true
       end
     end
+
+    describe "#env_var_name" do
+      it "returns the correct name for a config value and its object" do
+        #Loquacious.env_prefix = "LOQ"
+        ::Loquacious::Configuration.env_var_name("inner", obj.bar.baz).should == "LOQ_APP_BAR_BAZ_INNER"
+      end
+    end
+
   end#added features for ENV
 end
 
