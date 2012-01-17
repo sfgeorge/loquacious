@@ -484,6 +484,16 @@ describe Loquacious::Configuration do
       obj.__transforms[:name].is_a?(Proc).should be_true
     end
 
+    it "overrides a value with the correct ENV value" do
+      ENV["LOQ_APP_FOO"] = "envbar"
+      obj.foo.eql?("envbar").should be_true
+    end
+
+    it "transforms the value using the provided lambda" do
+      ENV["LOQ_APP_NAME"] = "envname"
+      obj.name.eql?(:envname).should be_true
+    end
+
     describe "#parent_list" do
       it "returns the correct parent list for a configuration object" do
         obj.bar.baz.parent_list.eql?(["app", "bar"]).should be_true

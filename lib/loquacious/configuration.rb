@@ -188,13 +188,13 @@ module Loquacious
             value = @__defaults[#{m.inspect}] if value.kind_of?(Loquacious::Undefined) and @__defaults.has_key? #{m.inspect}
             if Loquacious.env_config
               env_name = Loquacious::Utility.env_var_name(__method__, self)
-              #if ENV.has_key? env_name
-                #if @__transforms.has_key? m
-                  #return @__transforms[m].call ENV[env_name]
-                #else
-                  #return ENV[env_name]
-                #end
-              #end
+              if ENV.has_key? env_name
+                if @__transforms.has_key? __method__
+                  return @__transforms[__method__].call ENV[env_name]
+                else
+                  return ENV[env_name]
+                end
+              end
             end
             return value.respond_to?(:call) ? value.call : value
           end
