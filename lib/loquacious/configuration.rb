@@ -43,7 +43,7 @@ module Loquacious
         if @table.has_key? name
           DSL.evaluate(:config => @table[name], &block)
         else
-          @table[name] = DSL.evaluate(&block)
+          @table[name] = DSL.evaluate(:config_name => name, &block)
         end
       end
 
@@ -105,7 +105,19 @@ module Loquacious
 
         return cache[nil]
       end
-    end
+
+      def parent_list(config)
+        current_parent = config.__parent
+        parents = []
+        until current_parent.nil? do
+          parents.unshift current_parent.__name
+          current_parent = current_parent.__parent
+        end
+        parents
+      end
+
+    end#self methdos
+
 
     instance_methods(true).each do |m|
       next if m[::Loquacious::KEEPERS]
@@ -134,6 +146,12 @@ module Loquacious
     # default values to be set instead regular values.
     attr_accessor :__defaults_mode
 
+    # Name for this configuration object
+    attr_accessor :__name
+
+    # Name of the parent configuration object, used for traversal
+    attr_accessor :__parent
+
     # Create a new configuration object and initialize it using an optional
     # _block_ of code.
     #
@@ -142,6 +160,7 @@ module Loquacious
       @__values = Hash.new
       @__defaults = Hash.new
       @__defaults_mode = false
+      @__parent = nil
       DSL.evaluate(:config => self, &block) if block
     end
 
@@ -166,7 +185,7 @@ module Loquacious
           end
 
           if block
-            v = DSL.evaluate(:defaults_mode => __defaults_mode, &block)
+            v = DSL.evaluate(:parent_config => self, :config_name => __method__.to_s, :defaults_mode => __defaults_mode, &block)
             if value.kind_of?(Configuration)
               value.merge! v
             else
@@ -274,6 +293,11 @@ module Loquacious
       ::Loquacious::Configuration.to_hash(self)
     end
 
+    # Returns an array of the parents in descending order
+    def parent_list
+      ::Loquacious::Configuration.parent_list(self)
+    end
+
     # Implementation of a domain specific language for creating configuration
     # objects. Blocks of code are evaluted by the DSL which returns a new
     # configuration object.
@@ -315,6 +339,8 @@ module Loquacious
         @description = nil
         @__config = opts[:config] || Configuration.new
         @__config.__defaults_mode = opts.key?(:defaults_mode) ? opts[:defaults_mode] : false
+        @__config.__name = opts[:config_name] || nil
+        @__config.__parent = opts[:parent_config] || nil
         instance_eval(&block)
       ensure
         @__config.__defaults_mode = false

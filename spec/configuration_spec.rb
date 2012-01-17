@@ -452,5 +452,39 @@ describe Loquacious::Configuration do
     end
   end
 
+  # Added tests
+  describe "added features for ENV configuration" do
+    let(:obj) {
+      Loquacious.configuration_for('app') {
+        name 'value', :desc => "Defines the name", :transform => Proc.new{|baz| baz.to_s }
+        foo  'bar',   :desc => "FooBar"
+        id   42,      :desc => "Ara T. Howard"
+        bar {
+          recur 'sive'
+          baz {
+            inner 'config'
+          }
+        }
+      }
+    }
+
+    it "sets the name for the created config" do
+      obj.__name.eql?("app").should be_true
+    end
+
+    it "sets the name for a nested object" do
+      obj.bar.__name.eql?("bar").should be_true
+    end
+
+    it "sets the parent name for a nested object" do
+      obj.bar.__parent.__name.eql?("app").should be_true
+    end
+
+    describe "#parent_list" do
+      it "returns the correct parent list for a configuration object" do
+        obj.bar.baz.parent_list.eql?(["app", "bar"]).should be_true
+      end
+    end
+  end#added features for ENV
 end
 

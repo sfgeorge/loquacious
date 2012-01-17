@@ -2,6 +2,15 @@
 require File.expand_path('../lib/loquacious', File.dirname(__FILE__))
 
 RSpec.configure do |config|
+  # Use color in STDOUT
+  config.color_enabled = true
+
+  # Use color not only in STDOUT but also in pagers and files
+  config.tty = true
+
+  # Use the specified formatter
+  config.formatter = :documentation # :progress, :html, :textmate
+  
   # == Mock Framework
   #
   # RSpec uses it's own mocking framework by default. If you prefer to
