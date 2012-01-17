@@ -116,14 +116,7 @@ module Loquacious
           current_parent = current_parent.__parent
         end
         parents
-      end
-
-      # Returns the variable name to use for a value to be picked from ENV
-      # 
-      def env_var_name(name, config)
-        [::Loquacious.env_prefix, config.parent_list.join("_"), config.__name, name.to_s].join("_").upcase
-      end
-
+      end 
     end#self methods
 
 
@@ -193,8 +186,8 @@ module Loquacious
           if args.empty? and !block
             return value if value.kind_of?(Configuration)
             value = @__defaults[#{m.inspect}] if value.kind_of?(Loquacious::Undefined) and @__defaults.has_key? #{m.inspect}
-            #if Loquacious.env_config
-              #env_name = Loquacious::Configuration.env_var_name(m, self)
+            if Loquacious.env_config
+              env_name = Loquacious::Utility.env_var_name(__method__, self)
               #if ENV.has_key? env_name
                 #if @__transforms.has_key? m
                   #return @__transforms[m].call ENV[env_name]
@@ -202,7 +195,7 @@ module Loquacious
                   #return ENV[env_name]
                 #end
               #end
-            #end
+            end
             return value.respond_to?(:call) ? value.call : value
           end
 

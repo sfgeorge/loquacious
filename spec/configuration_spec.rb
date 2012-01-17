@@ -490,13 +490,6 @@ describe Loquacious::Configuration do
       end
     end
 
-    describe "#env_var_name" do
-      it "returns the correct name for a config value and its object" do
-        #Loquacious.env_prefix = "LOQ"
-        ::Loquacious::Configuration.env_var_name("inner", obj.bar.baz).should == "LOQ_APP_BAR_BAZ_INNER"
-      end
-    end
-
   end#added features for ENV
 end
 
