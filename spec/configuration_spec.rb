@@ -492,6 +492,7 @@ describe Loquacious::Configuration do
     it "transforms the value using the provided lambda" do
       ENV["LOQ_APP_NAME"] = "envname"
       obj.name.eql?(:envname).should be_true
+      obj.name.is_a?(Symbol).should be_true
     end
 
     describe "#parent_list" do
