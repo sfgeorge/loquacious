@@ -9,10 +9,10 @@ task :default => 'spec:run'
 task 'gem:release' => 'spec:run'
 
 Bones {
-  name         'loquacious'
-  authors      'Tim Pease'
-  email        'tim.pease@gmail.com'
-  url          'http://rubygems.org/gems/loquacious'
+  name         'adhearsion-loquacious'
+  authors      'Tim Pease', 'Adhearsion Team'
+  email        'tim.pease@gmail.com', 'all@adhearsion.com'
+  url          'http://rubygems.org/gems/adhearsion-loquacious'
   readme_file  'README.rdoc'
   spec.opts << '--color'
   use_gmail
@@ -21,7 +21,7 @@ Bones {
 }
 
 task 'ann:prereqs' do
-  Bones.config.name = 'Loquacious'
+  Bones.config.name = 'Adhearsion-Loquacious'
 end
 
 # depending on bones (even as a development dependency) creates a circular
