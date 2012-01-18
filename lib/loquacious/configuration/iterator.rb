@@ -134,7 +134,7 @@ class Loquacious::Configuration
       cfg = frame.config
       name = frame.prefix.empty? ? key.to_s : frame.prefix + ".#{key}"
       description = cfg.__desc[key]
-      if Loquacious.env_config
+      if Loquacious.env_config && description
         description += " [" + Loquacious::Utility.env_var_name(name, cfg) + "]"
       end
       Node.new(cfg, name, description, key)
@@ -156,4 +156,3 @@ class Loquacious::Configuration
 
   end  # class Iterator
 end  # class Loquacious::Configuration
-

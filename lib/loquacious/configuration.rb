@@ -41,7 +41,7 @@ module Loquacious
         end
 
         if @table.has_key? name
-          DSL.evaluate(:config => @table[name], &block)
+          DSL.evaluate(:config_name => name, :config => @table[name], &block)
         else
           @table[name] = DSL.evaluate(:config_name => name, &block)
         end
@@ -67,7 +67,7 @@ module Loquacious
         if @table.has_key? name
           DSL.evaluate(:config => @table[name], :defaults_mode => true, &block)
         else
-          @table[name] = DSL.evaluate(:defaults_mode => true, &block)
+          @table[name] = DSL.evaluate(:config_name => name, :defaults_mode => true, &block)
         end
       end
 

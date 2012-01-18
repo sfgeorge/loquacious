@@ -67,5 +67,4 @@ describe Loquacious::Configuration::Iterator do
     ary.should be == %w{first second third third.answer third.question}
   end
 end
-
 # EOF
