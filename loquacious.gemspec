@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "loquacious/version"
 
 Gem::Specification.new do |s|
-  s.name        = "loquacious"
+  s.name        = "adhearsion-loquacious"
   s.version     = Loquacious::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Tim Pease"]
