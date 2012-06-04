@@ -1,5 +1,4 @@
-
-require File.expand_path('spec_helper', File.dirname(__FILE__))
+require 'spec_helper'
 
 describe Loquacious::Configuration do
   before(:each) do

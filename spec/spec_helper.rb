@@ -1,26 +1,19 @@
+# encoding: utf-8
 
-require File.expand_path('../lib/loquacious', File.dirname(__FILE__))
+%w{
+  bundler/setup
+  loquacious
+}.each { |f| require f }
+
+Bundler.require(:default, :test) if defined?(Bundler)
+
+Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each { |f| require f }
 
 RSpec.configure do |config|
-  # Use color in STDOUT
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+  config.filter_run :focus => true
+  config.run_all_when_everything_filtered = true
   config.color_enabled = true
-
-  # Use color not only in STDOUT but also in pagers and files
-  config.tty = true
-
-  # Use the specified formatter
-  config.formatter = :documentation # :progress, :html, :textmate
-  
-  # == Mock Framework
-  #
-  # RSpec uses it's own mocking framework by default. If you prefer to
-  # use mocha, flexmock or RR, uncomment the appropriate line:
-  #
-  # config.mock_with :mocha
-  # config.mock_with :flexmock
-  # config.mock_with :rr
-
-  Loquacious::Undefined.io = StringIO.new
 
   config.before :each do
     Loquacious::Undefined.io.clear
@@ -39,32 +32,12 @@ RSpec.configure do |config|
       }
     end
   end
+
+  # Use color not only in STDOUT but also in pagers and files
+  config.tty = true
+
+  # Use the specified formatter
+  config.formatter = :documentation # :progress, :html, :textmate
+
+  Loquacious::Undefined.io = StringIO.new
 end
-
-class StringIO
-  alias :_readline :readline
-  def readline
-    @pos ||= 0
-    seek @pos
-    line = _readline
-    @pos = tell
-    return line
-  rescue EOFError
-    nil
-  end
-
-  def clear
-    @pos = 0
-    seek 0
-    truncate 0
-  end
-
-  def to_s
-    @pos = tell
-    seek 0
-    str = read
-    seek @pos
-    return str
-  end
-end
-

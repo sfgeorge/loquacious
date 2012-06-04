@@ -1,13 +1,8 @@
-
-require File.expand_path('spec_helper', File.dirname(__FILE__))
+require 'spec_helper'
 
 describe Loquacious do
   before(:all) do
     @root_dir = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-  end
-
-  it "should report a version number" do
-    Loquacious.version.should match(%r/\d+\.\d+\.\d+/)
   end
 
   it "finds things releative to 'lib'" do
