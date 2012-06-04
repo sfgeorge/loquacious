@@ -1,4 +1,3 @@
-
 require 'pp'
 require 'stringio'
 
@@ -185,7 +184,7 @@ class Loquacious::Configuration
           desc = desc.gsub(%r/([^\n]+)/,
                            self.__send__(@colors[:description], '\1'))
         end
-        @io.puts(desc.indent(@desc_leader))
+        @io.puts(StringPresenter.new(desc).indent(@desc_leader))
       end
 
       @io.puts(format_name(node, show_value))
@@ -197,7 +196,7 @@ class Loquacious::Configuration
     # also be included in the returned string.
     #
     def format_name( node, show_value )
-      name = node.name.reduce @name_length
+      name = StringPresenter.new(node.name).reduce @name_length
       return @name_format % name if node.config? or !show_value
 
       sio = StringIO.new

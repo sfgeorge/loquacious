@@ -2,26 +2,6 @@ require 'spec_helper'
 
 describe String do
 
-  it "reduces to a size by replacing characters from the middle" do
-    "this is a longish string".reduce(10).should be == "this...ing"
-    "this is a longish string".reduce(15).should be == "this i...string"
-    "this is a longish string".reduce(24).should be == "this is a longish string"
-
-    "this is a longish string".reduce(10, '--').should be == "this--ring"
-  end
-
-  it "indents by a given number of spaces" do
-    "hello".indent(2).should be == "  hello"
-    "hello\nworld".indent(4).should be == "    hello\n    world"
-    "  a\nslightly\n longer\n   string\n".indent(2).should be == "    a\n  slightly\n   longer\n     string\n  "
-  end
-
-  it "indents using a leader string" do
-    "hello".indent("foo ").should be == "foo hello"
-    "hello\nworld".indent("...").should be == "...hello\n...world"
-    "  a\nslightly\n longer\n   string\n".indent("#").should be == "#  a\n#slightly\n# longer\n#   string\n#"
-  end
-
   it "removes a leading gutter from all lines" do
     str = "  | foo"
     result = str.gutter!
@@ -48,5 +28,3 @@ describe String do
     result.should_not equal(str)
   end
 end
-
-# EOF

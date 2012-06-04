@@ -155,5 +155,6 @@ Loquacious.libpath {
   require 'loquacious/configuration'
   require 'loquacious/configuration/iterator'
   require 'loquacious/configuration/help'
+  require 'loquacious/configuration/help/string_presenter'
 }
 
