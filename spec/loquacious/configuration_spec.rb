@@ -495,6 +495,14 @@ describe Loquacious::Configuration do
       obj.foo.eql?("envbar").should be_true
     end
 
+    it 'can be changed after an ENV value has overridden its value' do
+      ENV['LOQ_APP_FOO'] = 'envbar'
+      obj.foo.eql?('envbar').should be_true
+      obj.foo = 'appbaz'
+      obj.foo.eql?('envbar').should be_false
+      obj.foo.eql?('appbaz').should be_true
+    end
+
     it "transforms the value using the provided lambda" do
       ENV["LOQ_APP_NAME"] = "envname"
       obj.name.eql?(:envname).should be_true
